@@ -1,102 +1,92 @@
-import React from 'react';
-import { AcademicSection } from './sections/AcademicSection';
-import { AnnouncementsSection } from './sections/AnnouncementsSection';
-import { QuickActions } from './sections/QuickActions';
+import React, { useState } from 'react';
+import { Navigation } from './Navigation';
+import { DashboardPage } from '../pages/DashboardPage';
+import { AcademicPage } from '../pages/AcademicPage';
 import { ScheduleSection } from './sections/ScheduleSection';
 import { PaymentsSection } from './sections/PaymentsSection';
+import { AnnouncementsSection } from './sections/AnnouncementsSection';
 import { EventsSection } from './sections/EventsSection';
 import { LibrarySection } from './sections/LibrarySection';
-import { TrendingUp, Calendar, BookOpen, Bell, CreditCard, Users, Award } from 'lucide-react';
+import { QuickActions } from './sections/QuickActions';
 
 export function Dashboard() {
-  const stats = [
-    {
-      title: 'Promedio General',
-      value: '16.8',
-      change: '+0.3',
-      icon: TrendingUp,
-      color: 'from-green-500 to-green-600',
-      bgColor: 'from-green-50 to-emerald-50'
-    },
-    {
-      title: 'Créditos Aprobados',
-      value: '18',
-      change: '+3',
-      icon: BookOpen,
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'from-blue-50 to-indigo-50'
-    },
-    {
-      title: 'Próximas Clases',
-      value: '3',
-      change: 'Hoy',
-      icon: Calendar,
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'from-purple-50 to-violet-50'
-    },
-    {
-      title: 'Anuncios Nuevos',
-      value: '5',
-      change: '+2',
-      icon: Bell,
-      color: 'from-orange-500 to-orange-600',
-      bgColor: 'from-orange-50 to-amber-50'
+  const [activeTab, setActiveTab] = useState('dashboard');
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return <DashboardPage />;
+      case 'academic':
+        return <AcademicPage />;
+      case 'schedule':
+        return (
+          <div className="space-y-8">
+            <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-3xl p-8 text-white shadow-xl">
+              <h1 className="text-4xl font-bold mb-2">Horario de Clases</h1>
+              <p className="text-purple-100 text-lg">Programación semanal de tus clases</p>
+            </div>
+            <ScheduleSection />
+          </div>
+        );
+      case 'payments':
+        return (
+          <div className="space-y-8">
+            <div className="bg-gradient-to-r from-orange-600 to-orange-800 rounded-3xl p-8 text-white shadow-xl">
+              <h1 className="text-4xl font-bold mb-2">Estado de Pagos</h1>
+              <p className="text-orange-100 text-lg">Gestión de pensiones y trámites</p>
+            </div>
+            <PaymentsSection />
+          </div>
+        );
+      case 'announcements':
+        return (
+          <div className="space-y-8">
+            <div className="bg-gradient-to-r from-red-600 to-red-800 rounded-3xl p-8 text-white shadow-xl">
+              <h1 className="text-4xl font-bold mb-2">Anuncios y Notificaciones</h1>
+              <p className="text-red-100 text-lg">Información importante de la universidad</p>
+            </div>
+            <AnnouncementsSection />
+          </div>
+        );
+      case 'events':
+        return (
+          <div className="space-y-8">
+            <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-3xl p-8 text-white shadow-xl">
+              <h1 className="text-4xl font-bold mb-2">Eventos y Actividades</h1>
+              <p className="text-indigo-100 text-lg">Actividades extracurriculares y eventos académicos</p>
+            </div>
+            <EventsSection />
+          </div>
+        );
+      case 'library':
+        return (
+          <div className="space-y-8">
+            <div className="bg-gradient-to-r from-teal-600 to-teal-800 rounded-3xl p-8 text-white shadow-xl">
+              <h1 className="text-4xl font-bold mb-2">Biblioteca Digital</h1>
+              <p className="text-teal-100 text-lg">Recursos académicos y materiales de estudio</p>
+            </div>
+            <LibrarySection />
+          </div>
+        );
+      case 'quick-actions':
+        return (
+          <div className="space-y-8">
+            <div className="bg-gradient-to-r from-pink-600 to-pink-800 rounded-3xl p-8 text-white shadow-xl">
+              <h1 className="text-4xl font-bold mb-2">Acciones Rápidas</h1>
+              <p className="text-pink-100 text-lg">Trámites y servicios estudiantiles</p>
+            </div>
+            <QuickActions />
+          </div>
+        );
+      default:
+        return <DashboardPage />;
     }
-  ];
+  };
 
   return (
     <main className="w-full">
-      {/* Welcome Section */}
-      <div className="mb-8">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-3xl p-8 text-white shadow-xl">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">¡Bienvenido de vuelta!</h1>
-              <p className="text-blue-100 text-lg">Aquí tienes un resumen completo de tu actividad académica</p>
-            </div>
-            <div className="hidden md:block">
-              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
-                <BookOpen className="w-10 h-10" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat, index) => (
-          <div key={index} className={`bg-gradient-to-br ${stat.bgColor} rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200`}>
-            <div className="flex items-center justify-between mb-4">
-              <div className={`w-12 h-12 bg-gradient-to-br ${stat.color} rounded-xl flex items-center justify-center shadow-sm`}>
-                <stat.icon className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-sm font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">
-                {stat.change}
-              </span>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
-              <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-3 space-y-8">
-          <AcademicSection />
-          <ScheduleSection />
-          <PaymentsSection />
-          <EventsSection />
-          <LibrarySection />
-        </div>
-        <div className="lg:col-span-1 space-y-8">
-          <QuickActions />
-          <AnnouncementsSection />
-        </div>
-      </div>
+      <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+      {renderContent()}
     </main>
   );
 }
