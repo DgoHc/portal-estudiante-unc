@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { GraduationCap, Menu, X, LogIn } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
+import { useAuth } from '../contexts/AuthContext';
 
 export function PublicNavbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   return (
     <header className="bg-white shadow-lg border-b border-gray-100 sticky top-0 z-40">
@@ -36,10 +38,16 @@ export function PublicNavbar() {
             <HashLink smooth to="/#team" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
               Equipo
             </HashLink>
-            <Link to="/login" className="inline-flex items-center space-x-2 px-5 py-2 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md">
-              <LogIn className="w-5 h-5" />
-              <span>Acceder</span>
-            </Link>
+            {isAuthenticated ? (
+              <Link to="/dashboard" className="inline-flex items-center space-x-2 px-5 py-2 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md">
+                <span>Ir al dashboard</span>
+              </Link>
+            ) : (
+              <Link to="/login" className="inline-flex items-center space-x-2 px-5 py-2 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md">
+                <LogIn className="w-5 h-5" />
+                <span>Acceder</span>
+              </Link>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -66,10 +74,16 @@ export function PublicNavbar() {
               <HashLink smooth to="/#team" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">
                 Equipo
               </HashLink>
-              <Link to="/login" className="flex items-center space-x-2 px-4 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors duration-200">
-                <LogIn className="w-5 h-5" />
-                <span>Acceder</span>
-              </Link>
+              {isAuthenticated ? (
+                <Link to="/dashboard" className="flex items-center space-x-2 px-4 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors duration-200">
+                  <span>Ir al dashboard</span>
+                </Link>
+              ) : (
+                <Link to="/login" className="flex items-center space-x-2 px-4 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors duration-200">
+                  <LogIn className="w-5 h-5" />
+                  <span>Acceder</span>
+                </Link>
+              )}
             </nav>
           </div>
         </div>

@@ -1,51 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CreditCard, CheckCircle, AlertCircle, DollarSign, Calendar, TrendingUp, Download, Printer } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+import { apiGetPayments, apiPayPayment } from '../../api';
 
 export function PaymentsSection() {
   const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
   const [showDownloadConfirmation, setShowDownloadConfirmation] = useState(false);
+  const { student } = useAuth();
+  const [payments, setPayments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const payments = [
-    {
-      id: 1,
-      month: 'Noviembre 2024',
-      amount: 280.00,
-      status: 'paid',
-      dueDate: '2024-11-15',
-      paidDate: '2024-11-10',
-      type: 'Pensión Regular',
-      description: 'Pago mensual de la pensión universitaria.'
-    },
-    {
-      id: 2,
-      month: 'Diciembre 2024',
-      amount: 280.00,
-      status: 'pending',
-      dueDate: '2024-12-15',
-      type: 'Pensión Regular',
-      description: 'Próximo pago mensual de la pensión.'
-    },
-    {
-      id: 3,
-      month: 'Certificado de Estudios',
-      amount: 15.00,
-      status: 'paid',
-      dueDate: '2024-11-20',
-      paidDate: '2024-11-18',
-      type: 'Trámite',
-      description: 'Costo por la emisión del certificado oficial.'
-    },
-    {
-      id: 4,
-      month: 'Matrícula 2024-II',
-      amount: 100.00,
-      status: 'paid',
-      dueDate: '2024-08-01',
-      paidDate: '2024-07-28',
-      type: 'Matrícula',
-      description: 'Pago por concepto de matrícula del segundo semestre.'
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!student?.code) return;
+      setLoading(true);
+      try {
+        const { payments } = await apiGetPayments(student.code);
+        if (!cancelled) setPayments(payments);
+      } catch (_e) {
+        if (!cancelled) setPayments([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     }
-  ];
+    load();
+    return () => { cancelled = true; };
+  }, [student?.code]);
 
   const paymentStats = [
     {
@@ -78,9 +59,16 @@ export function PaymentsSection() {
     return status === 'paid' ? CheckCircle : AlertCircle;
   };
 
-  const handleMakePayment = () => {
-    setShowPaymentConfirmation(true);
-    setTimeout(() => setShowPaymentConfirmation(false), 3000); // Hide after 3 seconds
+  const handleMakePayment = async (paymentId?: number) => {
+    if (!student?.code) return;
+    try {
+      if (paymentId) await apiPayPayment(student.code, paymentId);
+      setPayments(prev => prev.map(p => p.id === paymentId ? { ...p, status: 'paid', paidDate: new Date().toISOString() } : p));
+      setShowPaymentConfirmation(true);
+      setTimeout(() => setShowPaymentConfirmation(false), 3000);
+    } catch (_e) {
+      // no-op
+    }
   };
 
   const handleDownloadReceipt = () => {
@@ -139,7 +127,9 @@ export function PaymentsSection() {
       {/* Payments List */}
       <div className="space-y-6">
         <h3 className="text-2xl font-bold text-gray-900 mb-6">Historial de Pagos</h3>
-        {payments.map((payment) => {
+        {loading && <div className="text-gray-600">Cargando pagos...</div>}
+        {!loading && payments.length === 0 && <div className="text-gray-600">Sin pagos registrados.</div>}
+        {!loading && payments.map((payment) => {
           const StatusIcon = getStatusIcon(payment.status);
           return (
             <div key={payment.id} className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl p-6 hover:shadow-lg transition-all duration-300">
@@ -191,7 +181,7 @@ export function PaymentsSection() {
         <h3 className="text-2xl font-bold text-gray-900 mb-4">Acciones de Pago</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button 
-            onClick={handleMakePayment}
+            onClick={() => handleMakePayment(payments.find(p => p.status !== 'paid')?.id)}
             className="flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-sm hover:shadow-md"
           >
             <CreditCard className="w-5 h-5" />

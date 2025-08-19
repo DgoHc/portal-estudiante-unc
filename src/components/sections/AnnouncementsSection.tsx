@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bell, Calendar, MapPin, ExternalLink, AlertTriangle, Info, CheckCircle, Search } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { apiGetAnnouncements } from '../../api';
 
 interface AnnouncementsSectionProps {
   onTabChange: (tab: string) => void;
@@ -9,69 +10,28 @@ interface AnnouncementsSectionProps {
 
 export function AnnouncementsSection({ onTabChange }: AnnouncementsSectionProps) {
   const [showViewAllConfirmation, setShowViewAllConfirmation] = useState(false);
+  const [announcements, setAnnouncements] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const announcements = [
-    {
-      id: 1,
-      title: 'Conferencia: IA en la Industria 4.0',
-      description: 'Conferencia magistral sobre aplicaciones de inteligencia artificial en la industria moderna. Invitado especial: Dr. Roberto Silva.',
-      date: new Date(2024, 10, 15, 14, 0),
-      location: 'Auditorio Central',
-      type: 'evento',
-      priority: 'high',
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-blue-50',
-      link: '#'
-    },
-    {
-      id: 2,
-      title: 'Matrícula Extemporánea',
-      description: 'Último plazo para matrícula extemporánea del semestre 2024-II. Documentos requeridos: DNI, voucher de pago y constancia de estudios.',
-      date: new Date(2024, 10, 20),
-      location: 'Secretaría Académica',
-      type: 'tramite',
-      priority: 'urgent',
-      color: 'from-red-500 to-red-600',
-      bgColor: 'bg-red-50',
-      link: '#'
-    },
-    {
-      id: 3,
-      title: 'Taller: Desarrollo con React.js',
-      description: 'Taller práctico de desarrollo frontend con React y TypeScript. Cupos limitados. Incluye certificado de participación.',
-      date: new Date(2024, 10, 17, 16, 0),
-      location: 'Lab. Sistemas 2',
-      type: 'evento',
-      priority: 'medium',
-      color: 'from-green-500 to-green-600',
-      bgColor: 'bg-green-50',
-      link: '#'
-    },
-    {
-      id: 4,
-      title: 'Feria de Proyectos de Tesis',
-      description: 'Presentación de proyectos de tesis de estudiantes de noveno y décimo ciclo. Evaluación de jurados especializados.',
-      date: new Date(2024, 10, 25, 9, 0),
-      location: 'Patio Central',
-      type: 'evento',
-      priority: 'medium',
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'bg-purple-50',
-      link: '#'
-    },
-    {
-      id: 5,
-      title: 'Mantenimiento de Servidores',
-      description: 'Mantenimiento programado de la plataforma virtual. Puede haber interrupciones del servicio.',
-      date: new Date(2024, 10, 28, 22, 0),
-      location: 'Plataforma Virtual',
-      type: 'info',
-      priority: 'low',
-      color: 'from-gray-500 to-gray-600',
-      bgColor: 'bg-gray-50',
-      link: '#'
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const { announcements } = await apiGetAnnouncements();
+        if (!cancelled) setAnnouncements(announcements.map(a => ({
+          ...a,
+          date: new Date(a.date),
+        })));
+      } catch (_e) {
+        if (!cancelled) setAnnouncements([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     }
-  ];
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -132,7 +92,9 @@ export function AnnouncementsSection({ onTabChange }: AnnouncementsSectionProps)
       {/* Announcements Content */}
       <div className="space-y-6">
         <h3 className="text-2xl font-bold text-gray-900 mb-6">Últimos Anuncios</h3>
-        {announcements.map((announcement) => {
+        {loading && <div className="text-gray-600">Cargando anuncios...</div>}
+        {!loading && announcements.length === 0 && <div className="text-gray-600">Sin anuncios activos.</div>}
+        {!loading && announcements.map((announcement) => {
           const TypeIcon = getTypeIcon(announcement.type);
           const PriorityIcon = getPriorityIcon(announcement.priority);
           const timeAgo = formatDistanceToNow(announcement.date, { 
@@ -143,7 +105,7 @@ export function AnnouncementsSection({ onTabChange }: AnnouncementsSectionProps)
           return (
             <div 
               key={announcement.id} 
-              className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:shadow-lg transition-all duration-300`}
+              className={`bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300`}
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start space-x-4">
@@ -157,7 +119,7 @@ export function AnnouncementsSection({ onTabChange }: AnnouncementsSectionProps)
                         <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 leading-relaxed">{announcement.description}</p>
+                    <p className="text-sm text-gray-700 leading-relaxed">{announcement.description}</p>
                   </div>
                 </div>
                 <div className="flex flex-col items-end space-y-2">

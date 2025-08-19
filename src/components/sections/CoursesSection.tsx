@@ -47,26 +47,26 @@ export const CoursesSection: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">Mis Cursos</h2>
+    <div className="space-y-8 p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-3xl font-bold text-gray-900 mb-6">Mis Cursos</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.map((course) => (
-          <div key={course.id} className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 hover:shadow-md transition-shadow">
+          <div key={course.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <div className="flex items-center mb-4">
-              <Book className="w-6 h-6 text-blue-500 mr-3" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{course.name}</h3>
+              <Book className="w-6 h-6 text-blue-600 mr-3" />
+              <h3 className="text-xl font-semibold text-gray-900">{course.name}</h3>
             </div>
-            <p className="text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+            <p className="text-gray-700 mb-2 flex items-center">
               <User className="w-4 h-4 mr-2 text-gray-500" />
               Profesor: {course.professor}
             </p>
-            <p className="text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+            <p className="text-gray-700 mb-2 flex items-center">
               <CalendarDays className="w-4 h-4 mr-2 text-gray-500" />
               Horario: {course.schedule}
             </p>
-            <div className="flex justify-between items-center mt-4 text-sm text-gray-600 dark:text-gray-400">
-              <span>Código: <span className="font-medium text-gray-800 dark:text-gray-200">{course.code}</span></span>
-              <span>Créditos: <span className="font-medium text-gray-800 dark:text-gray-200">{course.credits}</span></span>
+            <div className="flex justify-between items-center mt-4 text-sm text-gray-600">
+              <span>Código: <span className="font-medium text-gray-800">{course.code}</span></span>
+              <span>Créditos: <span className="font-medium text-gray-800">{course.credits}</span></span>
             </div>
           </div>
         ))}

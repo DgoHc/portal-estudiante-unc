@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { apiLogin } from '../api';
 
 interface Student {
   id: string;
@@ -13,8 +14,9 @@ interface Student {
 interface AuthContextType {
   student: Student | null;
   isAuthenticated: boolean;
-  login: (code: string, password: string) => boolean;
+  login: (code: string, password: string) => Promise<boolean>;
   logout: () => void;
+  isReady: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,25 +32,67 @@ const mockStudent: Student = {
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [student, setStudent] = useState<Student | null>(mockStudent);
+  const [student, setStudent] = useState<Student | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
-  const login = (code: string, password: string): boolean => {
-    if (code === '202015001' && password === 'password') {
-      setStudent(mockStudent);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('auth');
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved?.student && saved?.isAuthenticated) {
+          setStudent(saved.student);
+          setIsAuthenticated(true);
+        }
+      }
+    } catch {}
+    setIsReady(true);
+  }, []);
+
+  const login = async (code: string, password: string): Promise<boolean> => {
+    try {
+      const { student } = await apiLogin(code, password);
+      setStudent({
+        id: student.id,
+        name: student.name,
+        code: student.code,
+        career: student.career,
+        semester: student.semester,
+        email: student.email,
+        phone: student.phone,
+      });
       setIsAuthenticated(true);
+      try { localStorage.setItem('auth', JSON.stringify({ student: {
+        id: student.id,
+        name: student.name,
+        code: student.code,
+        career: student.career,
+        semester: student.semester,
+        email: student.email,
+        phone: student.phone,
+      }, isAuthenticated: true })); } catch {}
       return true;
+    } catch (_e) {
+      // fallback: allow demo login with mock if matches demo credentials
+      if (code === '202015001' && password === 'password') {
+        setStudent(mockStudent);
+        setIsAuthenticated(true);
+        try { localStorage.setItem('auth', JSON.stringify({ student: mockStudent, isAuthenticated: true })); } catch {}
+        return true;
+      }
+      return false;
     }
-    return false;
   };
 
   const logout = () => {
     setStudent(null);
     setIsAuthenticated(false);
+    try { localStorage.removeItem('auth'); } catch {}
   };
 
   return (
-    <AuthContext.Provider value={{ student, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ student, isAuthenticated, login, logout, isReady }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,116 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BookOpen, Download, Search, Clock, Users, Star, FileText, Video, Database, Book, ListFilter, FolderOpen } from 'lucide-react';
+import { apiGetLibraryResources, apiDownloadResource } from '../../api';
 
 export function LibrarySection() {
   const [showDownloadConfirmation, setShowDownloadConfirmation] = useState<number | null>(null);
+  const [resources, setResources] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const resources = [
-    {
-      id: 1,
-      title: 'Ingeniería de Software - Sommerville',
-      type: 'libro',
-      author: 'Ian Sommerville',
-      year: 2021,
-      format: 'PDF',
-      size: '15.2 MB',
-      downloads: 234,
-      rating: 4.8,
-      isAvailable: true,
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-blue-50',
-      description: 'Libro fundamental para el curso de Ingeniería de Software.'
-    },
-    {
-      id: 2,
-      title: 'Algoritmos y Estructuras de Datos',
-      type: 'libro',
-      author: 'Thomas H. Cormen',
-      year: 2020,
-      format: 'PDF',
-      size: '8.7 MB',
-      downloads: 189,
-      rating: 4.9,
-      isAvailable: true,
-      color: 'from-green-500 to-green-600',
-      bgColor: 'bg-green-50',
-      description: 'Referencia clave para el estudio de algoritmos complejos.'
-    },
-    {
-      id: 3,
-      title: 'Base de Datos - Elmasri & Navathe',
-      type: 'libro',
-      author: 'Ramez Elmasri',
-      year: 2022,
-      format: 'PDF',
-      size: '12.1 MB',
-      downloads: 156,
-      rating: 4.7,
-      isAvailable: true,
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'bg-purple-50',
-      description: 'Texto esencial para comprender los fundamentos de bases de datos.'
-    },
-    {
-      id: 4,
-      title: 'Tutorial React.js Completo',
-      type: 'video',
-      author: 'Prof. Carlos Mendoza',
-      year: 2024,
-      format: 'MP4',
-      size: '45.3 MB',
-      downloads: 89,
-      rating: 4.6,
-      isAvailable: true,
-      color: 'from-orange-500 to-orange-600',
-      bgColor: 'bg-orange-50',
-      description: 'Serie de videos explicativos para aprender React desde cero.'
-    },
-    {
-      id: 5,
-      title: 'Guía de Laboratorio - Redes',
-      type: 'documento',
-      author: 'Ing. María Torres',
-      year: 2024,
-      format: 'DOCX',
-      size: '2.1 MB',
-      downloads: 67,
-      rating: 4.5,
-      isAvailable: true,
-      color: 'from-red-500 to-red-600',
-      bgColor: 'bg-red-50',
-      description: 'Documento con ejercicios prácticos para el laboratorio de redes.'
-    },
-    {
-      id: 6,
-      title: 'Articulo Científico: Deep Learning',
-      type: 'documento',
-      author: 'Dr. Sofia Rojas',
-      year: 2023,
-      format: 'PDF',
-      size: '5.8 MB',
-      downloads: 120,
-      rating: 4.9,
-      isAvailable: true,
-      color: 'from-teal-500 to-teal-600',
-      bgColor: 'bg-teal-50',
-      description: 'Investigación reciente sobre avances en redes neuronales profundas.'
-    },
-    {
-      id: 7,
-      title: 'Curso Online: Python para C. Datos',
-      type: 'video',
-      author: 'Educación Continua UNC',
-      year: 2023,
-      format: 'MP4',
-      size: '120 MB',
-      downloads: 95,
-      rating: 4.7,
-      isAvailable: false,
-      color: 'from-gray-500 to-gray-600',
-      bgColor: 'bg-gray-50',
-      description: 'Videos del curso online para análisis de datos con Python.'
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const { resources } = await apiGetLibraryResources();
+        if (!cancelled) setResources(resources);
+      } catch (_e) {
+        if (!cancelled) setResources([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     }
-  ];
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -132,11 +44,14 @@ export function LibrarySection() {
     }
   };
 
-  const handleDownload = (resourceId: number) => {
+  const handleDownload = async (resourceId: number) => {
+    try {
+      await apiDownloadResource(resourceId);
+    } catch (_e) {
+      // no-op
+    }
     setShowDownloadConfirmation(resourceId);
     setTimeout(() => setShowDownloadConfirmation(null), 3000);
-    console.log(`Simulando descarga del recurso ${resourceId}`);
-    // Aquí podrías añadir la lógica real para descargar el archivo
   };
 
   const handleAdvancedSearch = () => {
@@ -157,7 +72,7 @@ export function LibrarySection() {
   return (
     <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden p-4 md:p-6 lg:p-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-teal-600 to-teal-800 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden mb-8">
+      <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden mb-8">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative z-10 flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -185,7 +100,7 @@ export function LibrarySection() {
           <input
             type="text"
             placeholder="Buscar recursos, libros, videos..."
-            className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all bg-white/50 backdrop-blur-sm"
+            className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all bg-white"
           />
         </div>
       </div>
@@ -193,10 +108,12 @@ export function LibrarySection() {
       {/* Resources Content */}
       <div className="px-8 pb-8">
         <div className="space-y-4">
-          {resources.map((resource) => {
+          {loading && <div className="text-gray-600">Cargando recursos...</div>}
+          {!loading && resources.length === 0 && <div className="text-gray-600">Sin recursos disponibles.</div>}
+          {!loading && resources.map((resource) => {
             const TypeIcon = getTypeIcon(resource.type);
             return (
-              <div key={resource.id} className={`bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 ${!resource.isAvailable && 'opacity-60'}`}>
+              <div key={resource.id} className={`bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 ${!resource.isAvailable && 'opacity-60'}`}>
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start space-x-4">
                     <div className={`w-12 h-12 bg-gradient-to-br ${resource.color} rounded-xl flex items-center justify-center shadow-sm`}>
@@ -204,8 +121,8 @@ export function LibrarySection() {
                     </div>
                     <div className="flex-1">
                       <h3 className="font-bold text-gray-900 text-lg">{resource.title}</h3>
-                      <p className="text-gray-600 mt-1 text-sm">{resource.author} • {resource.year}</p>
-                      {resource.description && <p className="text-gray-500 text-xs mt-1">{resource.description}</p>}
+                      <p className="text-gray-700 mt-1 text-sm">{resource.author} • {resource.year}</p>
+                      {resource.description && <p className="text-gray-600 text-xs mt-1">{resource.description}</p>}
                     </div>
                   </div>
                   <div className="text-right">
@@ -219,12 +136,12 @@ export function LibrarySection() {
                           className={`w-4 h-4 ${i < Math.floor(resource.rating) ? 'text-yellow-500 fill-current' : 'text-gray-300'}`}
                         />
                       ))}
-                      <span className="text-sm font-medium text-gray-700 ml-1">({resource.rating})</span>
+                      <span className="text-sm font-medium text-gray-800 ml-1">({resource.rating})</span>
                     </div>
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-gray-600 mt-4 border-t border-gray-100 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-gray-700 mt-4 border-t border-gray-100 pt-4">
                   <div className="flex items-center space-x-3">
                     <FileText className="w-5 h-5 text-indigo-600" />
                     <div>

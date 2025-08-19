@@ -17,10 +17,7 @@ export function LoginForm() {
     setError('');
     setIsLoading(true);
 
-    // Simulate loading
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    const success = login(code, password);
+    const success = await login(code, password);
     if (success) {
       navigate('/dashboard'); // Redirect to dashboard on successful login
     } else {
@@ -191,6 +188,11 @@ export function LoginForm() {
               <a href="#" className="text-sm text-blue-400 hover:text-blue-200 font-medium transition-colors">
                 ¿Olvidaste tu contraseña?
               </a>
+              <div className="mt-3">
+                <a href="/register" className="text-sm text-blue-400 hover:text-blue-200 font-medium transition-colors">
+                  ¿No tienes cuenta? Regístrate
+                </a>
+              </div>
             </div>
           </div>
 

@@ -49,8 +49,8 @@ Base de datos PostgreSQL completa para el Portal Estudiantil de la Universidad N
 ### Pasos de Instalación
 
 1. **Crear la base de datos:**
-```bash
-psql -U postgres -c "CREATE DATABASE portal_estudiante_unc;"
+```bashDATABASE portal_estudiante_unc;"
+psql -U postgres -c "CREATE 
 ```
 
 2. **Ejecutar el esquema:**

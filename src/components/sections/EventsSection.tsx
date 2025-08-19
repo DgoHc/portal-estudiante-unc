@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, MapPin, Users, Clock, ExternalLink, Award, BookOpen, Users2, PlusCircle, CheckCircle } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { apiGetEvents, apiRegisterEvent } from '../../api';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface EventsSectionProps {
   onTabChange: (tab: string) => void;
@@ -9,65 +11,26 @@ interface EventsSectionProps {
 
 export function EventsSection({ onTabChange }: EventsSectionProps) {
   const [showRegisterConfirmation, setShowRegisterConfirmation] = useState<number | null>(null);
+  const [events, setEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { student } = useAuth();
 
-  const events = [
-    {
-      id: 1,
-      title: 'Conferencia: IA en la Industria 4.0',
-      description: 'Conferencia magistral sobre aplicaciones de inteligencia artificial en la industria moderna. Invitado especial: Dr. Roberto Silva.',
-      date: '2024-11-15T14:00:00',
-      location: 'Auditorio Central',
-      type: 'conferencia',
-      attendees: 120,
-      maxAttendees: 150,
-      isRegistered: true,
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-blue-50',
-      link: '#',
-    },
-    {
-      id: 2,
-      title: 'Taller: Desarrollo con React.js',
-      description: 'Taller práctico de desarrollo frontend con React y TypeScript. Cupos limitados. Incluye certificado de participación.',
-      date: '2024-11-17T16:00:00',
-      location: 'Lab. Sistemas 2',
-      type: 'taller',
-      attendees: 25,
-      maxAttendees: 30,
-      isRegistered: false,
-      color: 'from-green-500 to-green-600',
-      bgColor: 'bg-green-50',
-      link: '#',
-    },
-    {
-      id: 3,
-      title: 'Feria de Proyectos de Tesis',
-      description: 'Presentación de proyectos de tesis de estudiantes de noveno y décimo ciclo. Evaluación de jurados especializados.',
-      date: '2024-11-25T09:00:00',
-      location: 'Patio Central',
-      type: 'feria',
-      attendees: 80,
-      maxAttendees: 200,
-      isRegistered: false,
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'bg-purple-50',
-      link: '#',
-    },
-    {
-      id: 4,
-      title: 'Hackathon: Soluciones Tecnológicas',
-      description: 'Competencia de programación para desarrollar soluciones innovadoras y tecnológicas.',
-      date: '2024-12-05T08:00:00',
-      location: 'Centro de Innovación',
-      type: 'competencia',
-      attendees: 45,
-      maxAttendees: 60,
-      isRegistered: true,
-      color: 'from-orange-500 to-orange-600',
-      bgColor: 'bg-orange-50',
-      link: '#',
-    },
-  ];
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const { events } = await apiGetEvents();
+        if (!cancelled) setEvents(events);
+      } catch (_e) {
+        if (!cancelled) setEvents([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -89,11 +52,16 @@ export function EventsSection({ onTabChange }: EventsSectionProps) {
     }
   };
 
-  const handleRegister = (eventId: number) => {
-    setShowRegisterConfirmation(eventId);
-    setTimeout(() => setShowRegisterConfirmation(null), 3000); // Hide after 3 seconds
-    console.log(`Simulando inscripción al evento ${eventId}`);
-    // Aquí iría la lógica para registrar al usuario en el evento
+  const handleRegister = async (eventId: number) => {
+    if (!student?.code) return;
+    try {
+      await apiRegisterEvent(eventId, student.code);
+      setEvents(prev => prev.map(e => e.id === eventId ? { ...e, isRegistered: true, attendees: (e.attendees||0)+1 } : e));
+      setShowRegisterConfirmation(eventId);
+      setTimeout(() => setShowRegisterConfirmation(null), 3000);
+    } catch (_e) {
+      // no-op UI minimal
+    }
   };
 
   const handleViewRegistrations = () => {
@@ -122,11 +90,13 @@ export function EventsSection({ onTabChange }: EventsSectionProps) {
             </div>
           </div>
           <div className="hidden lg:block">
-            <div className="text-right">
-              <p className="text-sm font-medium text-indigo-100">Próximo Evento</p>
-              <p className="text-2xl font-bold">{format(parseISO(events[0].date), 'dd MMM', { locale: es })}</p>
-              <p className="text-sm text-indigo-100">{events[0].title}</p>
-            </div>
+            {events[0] && (
+              <div className="text-right">
+                <p className="text-sm font-medium text-indigo-100">Próximo Evento</p>
+                <p className="text-2xl font-bold">{format(parseISO(events[0].date), 'dd MMM', { locale: es })}</p>
+                <p className="text-sm text-indigo-100">{events[0].title}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -134,7 +104,9 @@ export function EventsSection({ onTabChange }: EventsSectionProps) {
       {/* Events Content */}
       <div className="space-y-6">
         <h3 className="text-2xl font-bold text-gray-900 mb-6">Próximos Eventos</h3>
-        {events.map((event) => {
+        {loading && <div className="text-gray-600">Cargando eventos...</div>}
+        {!loading && events.length === 0 && <div className="text-gray-600">Sin eventos.</div>}
+        {!loading && events.map((event) => {
           const TypeIcon = getTypeIcon(event.type);
           const eventDate = parseISO(event.date);
           const formattedDate = format(eventDate, 'dd/MM/yyyy HH:mm', { locale: es });

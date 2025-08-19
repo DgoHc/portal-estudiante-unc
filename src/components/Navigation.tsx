@@ -64,6 +64,13 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
       description: 'Actividades'
     },
     {
+      id: 'community',
+      name: 'Comunidad',
+      icon: Users,
+      color: 'from-sky-500 to-sky-600',
+      description: 'Chats y amigos'
+    },
+    {
       id: 'library',
       name: 'Biblioteca',
       icon: Library,

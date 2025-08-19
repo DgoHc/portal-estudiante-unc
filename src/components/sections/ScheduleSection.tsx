@@ -1,61 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, MapPin, Users, Clock, BookOpen, Play } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+import { apiGetSchedule } from '../../api';
 
 interface ScheduleSectionProps {
   onTabChange: (tab: string) => void;
 }
 
 export function ScheduleSection({ onTabChange }: ScheduleSectionProps) {
-  const schedule = [
-    {
-      id: 1,
-      time: '08:00 - 09:30',
-      course: 'Programación Avanzada',
-      room: 'Aula 201-A',
-      professor: 'Dr. Carlos Mendoza',
-      type: 'Teoría',
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-blue-50',
-      status: 'current',
-      date: 'Lunes'
-    },
-    {
-      id: 2,
-      time: '10:00 - 11:30',
-      course: 'Base de Datos II',
-      room: 'Lab. Sistemas 1',
-      professor: 'Mg. Ana Rodríguez',
-      type: 'Práctica',
-      color: 'from-green-500 to-green-600',
-      bgColor: 'bg-green-50',
-      status: 'upcoming',
-      date: 'Lunes'
-    },
-    {
-      id: 3,
-      time: '14:00 - 15:30',
-      course: 'Ingeniería de Software',
-      room: 'Aula 301-B',
-      professor: 'Dr. Luis Fernández',
-      type: 'Teoría',
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'bg-purple-50',
-      status: 'upcoming',
-      date: 'Martes'
-    },
-    {
-      id: 4,
-      time: '16:00 - 17:30',
-      course: 'Redes de Computadoras',
-      room: 'Lab. Redes',
-      professor: 'Ing. María Torres',
-      type: 'Laboratorio',
-      color: 'from-orange-500 to-orange-600',
-      bgColor: 'bg-orange-50',
-      status: 'upcoming',
-      date: 'Miércoles'
+  const { student } = useAuth();
+  const [schedule, setSchedule] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!student?.code) return;
+      setLoading(true);
+      try {
+        const { schedule } = await apiGetSchedule(student.code);
+        if (!cancelled) setSchedule(schedule);
+      } catch (_e) {
+        // fallback local sample
+        if (!cancelled) setSchedule([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     }
-  ];
+    load();
+    return () => { cancelled = true; };
+  }, [student?.code]);
 
   const today = new Date().toLocaleDateString('es-PE', { 
     weekday: 'long', 
@@ -111,11 +85,13 @@ export function ScheduleSection({ onTabChange }: ScheduleSectionProps) {
       </div>
 
       {/* Schedule Content */}
-      <div className="p-8 bg-gray-50 dark:bg-gray-700 rounded-lg">
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Clases Programadas</h3>
+      <div className="p-8 bg-gray-50 rounded-lg">
+        <h3 className="text-2xl font-bold text-gray-900 mb-6">Clases Programadas</h3>
         <div className="space-y-6">
-          {schedule.map((item, index) => (
-            <div key={item.id} className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 relative`}>
+          {loading && <div className="text-gray-600">Cargando horario...</div>}
+          {!loading && schedule.length === 0 && <div className="text-gray-600">Sin horario disponible.</div>}
+          {!loading && schedule.map((item, index) => (
+            <div key={item.id} className={`bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 relative`}>
               {/* Time indicator */}
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-400 to-purple-600 rounded-l-2xl"></div>
               
