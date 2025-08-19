@@ -1,7 +1,11 @@
 import React from 'react';
 import { Calendar, MapPin, Users, Clock, BookOpen, Play } from 'lucide-react';
 
-export function ScheduleSection() {
+interface ScheduleSectionProps {
+  onTabChange: (tab: string) => void;
+}
+
+export function ScheduleSection({ onTabChange }: ScheduleSectionProps) {
   const schedule = [
     {
       id: 1,
@@ -11,8 +15,9 @@ export function ScheduleSection() {
       professor: 'Dr. Carlos Mendoza',
       type: 'Teoría',
       color: 'from-blue-500 to-blue-600',
-      bgColor: 'from-blue-50 to-blue-100',
-      status: 'current'
+      bgColor: 'bg-blue-50',
+      status: 'current',
+      date: 'Lunes'
     },
     {
       id: 2,
@@ -22,8 +27,9 @@ export function ScheduleSection() {
       professor: 'Mg. Ana Rodríguez',
       type: 'Práctica',
       color: 'from-green-500 to-green-600',
-      bgColor: 'from-green-50 to-green-100',
-      status: 'upcoming'
+      bgColor: 'bg-green-50',
+      status: 'upcoming',
+      date: 'Lunes'
     },
     {
       id: 3,
@@ -33,8 +39,9 @@ export function ScheduleSection() {
       professor: 'Dr. Luis Fernández',
       type: 'Teoría',
       color: 'from-purple-500 to-purple-600',
-      bgColor: 'from-purple-50 to-purple-100',
-      status: 'upcoming'
+      bgColor: 'bg-purple-50',
+      status: 'upcoming',
+      date: 'Martes'
     },
     {
       id: 4,
@@ -44,8 +51,9 @@ export function ScheduleSection() {
       professor: 'Ing. María Torres',
       type: 'Laboratorio',
       color: 'from-orange-500 to-orange-600',
-      bgColor: 'from-orange-50 to-orange-100',
-      status: 'upcoming'
+      bgColor: 'bg-orange-50',
+      status: 'upcoming',
+      date: 'Miércoles'
     }
   ];
 
@@ -78,36 +86,38 @@ export function ScheduleSection() {
   };
 
   return (
-    <div id="horario" className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+    <div id="horario" className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden p-4 md:p-6 lg:p-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-yellow-500 to-orange-600 p-8 text-white">
-        <div className="flex items-center justify-between">
+      <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden mb-8">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative z-10 flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg">
               <Calendar className="w-8 h-8" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold">Horario de Hoy</h2>
-              <p className="text-yellow-100 text-lg capitalize">{today}</p>
+              <h2 className="text-3xl font-bold">Horario de Clases</h2>
+              <p className="text-purple-100 text-lg capitalize">{today}</p>
             </div>
           </div>
           <div className="hidden lg:block">
             <div className="text-right">
-              <p className="text-sm font-medium text-yellow-100">Próxima Clase</p>
+              <p className="text-sm font-medium text-purple-100">Próxima Clase</p>
               <p className="text-2xl font-bold">10:00</p>
-              <p className="text-sm text-yellow-100">Base de Datos II</p>
+              <p className="text-sm text-purple-100">Base de Datos II</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Schedule Content */}
-      <div className="p-8">
+      <div className="p-8 bg-gray-50 dark:bg-gray-700 rounded-lg">
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Clases Programadas</h3>
         <div className="space-y-6">
           {schedule.map((item, index) => (
-            <div key={item.id} className={`bg-gradient-to-br ${item.bgColor} border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 relative`}>
+            <div key={item.id} className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 relative`}>
               {/* Time indicator */}
-              <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-gray-300 to-gray-400 rounded-l-2xl"></div>
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-400 to-purple-600 rounded-l-2xl"></div>
               
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start space-x-4">
@@ -158,21 +168,30 @@ export function ScheduleSection() {
         <div className="mt-8 pt-6 border-t border-gray-200">
           <h3 className="text-lg font-bold text-gray-900 mb-4">Acciones Rápidas</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button className="flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-sm hover:shadow-md">
+            <button
+              onClick={() => onTabChange('schedule')}
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-sm hover:shadow-md"
+            >
               <Calendar className="w-5 h-5" />
-              <span className="font-medium">Ver Semana</span>
+              <span className="font-medium">Ver Semana Completa</span>
             </button>
-            <button className="flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-sm hover:shadow-md">
+            <button
+              onClick={() => console.log('Navegar a ubicaciones de aulas/laboratorios')}
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-sm hover:shadow-md"
+            >
               <MapPin className="w-5 h-5" />
-              <span className="font-medium">Ubicaciones</span>
+              <span className="font-medium">Ubicaciones de Aulas</span>
             </button>
-            <button className="flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-sm hover:shadow-md">
+            <button
+              onClick={() => onTabChange('teachers')}
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-sm hover:shadow-md"
+            >
               <Users className="w-5 h-5" />
-              <span className="font-medium">Profesores</span>
+              <span className="font-medium">Contactar Profesores</span>
             </button>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};

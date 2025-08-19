@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { GraduationCap, User, LogOut, Menu, X, Bell, Search } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export function Header() {
   const { student, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+
+  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
+  const toggleNotifications = () => setIsNotificationsOpen(!isNotificationsOpen);
 
   return (
     <header className="bg-white shadow-lg border-b border-gray-100 sticky top-0 z-30">
@@ -23,40 +28,27 @@ export function Header() {
             </div>
           </div>
           
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <a href="#dashboard" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
-              Dashboard
-            </a>
-            <a href="#horario" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
-              Horario
-            </a>
-            <a href="#notas" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
-              Notas
-            </a>
-            <a href="#anuncios" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
-              Anuncios
-            </a>
-            <a href="#eventos" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
-              Eventos
-            </a>
-          </nav>
-
-          {/* User Section */}
+          {/* User Section (always visible when authenticated) */}
           {student && (
             <div className="flex items-center space-x-4">
               {/* Search Icon */}
-              <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200">
+              <button 
+                onClick={toggleSearch}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+              >
                 <Search className="w-5 h-5" />
               </button>
               
               {/* Notifications */}
-              <button className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200">
+              <button 
+                onClick={toggleNotifications}
+                className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+              >
                 <Bell className="w-5 h-5" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
 
-              {/* User Profile */}
+              {/* User Profile (Desktop) */}
               <div className="hidden md:flex items-center space-x-3 bg-gray-50 rounded-full px-4 py-2">
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                   <User className="w-4 h-4 text-white" />
@@ -67,7 +59,7 @@ export function Header() {
                 </div>
               </div>
 
-              {/* Logout Button */}
+              {/* Logout Button (Desktop) */}
               <button 
                 onClick={logout}
                 className="hidden md:flex items-center space-x-2 px-4 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
@@ -79,7 +71,7 @@ export function Header() {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                className="md:hidden p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
               >
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -88,28 +80,35 @@ export function Header() {
         </div>
       </div>
 
+      {/* Search Modal/Dropdown */}
+      {isSearchOpen && (
+        <div className="absolute top-20 left-0 w-full bg-white shadow-lg py-4 px-4 sm:px-6 lg:px-8 border-t border-gray-200 z-20">
+          <input
+            type="text"
+            placeholder="Buscar cursos, profesores, etc."
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <p className="text-gray-500 text-sm mt-2">Funcionalidad de búsqueda en desarrollo...</p>
+        </div>
+      )}
+
+      {/* Notifications Dropdown */}
+      {isNotificationsOpen && (
+        <div className="absolute top-20 right-4 md:right-8 bg-white shadow-lg rounded-lg w-72 p-4 border border-gray-200 z-20">
+          <h3 className="font-semibold text-gray-900 mb-4">Notificaciones</h3>
+          <ul className="space-y-2">
+            <li className="text-gray-600 text-sm">No hay notificaciones nuevas.</li>
+            {/* Example Notification: */}
+            {/* <li className="text-gray-700 text-sm border-b border-gray-100 pb-2">Nueva nota disponible en Matemáticas I</li> */}
+          </ul>
+          <p className="text-gray-500 text-xs mt-4">Las notificaciones se actualizarán aquí.</p>
+        </div>
+      )}
+
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200">
           <div className="px-4 py-6 space-y-4">
-            <nav className="flex flex-col space-y-3">
-              <a href="#dashboard" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">
-                Dashboard
-              </a>
-              <a href="#horario" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">
-                Horario
-              </a>
-              <a href="#notas" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">
-                Notas
-              </a>
-              <a href="#anuncios" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">
-                Anuncios
-              </a>
-              <a href="#eventos" className="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200">
-                Eventos
-              </a>
-            </nav>
-            
             {student && (
               <div className="pt-4 border-t border-gray-200">
                 <div className="flex items-center space-x-3 mb-4">

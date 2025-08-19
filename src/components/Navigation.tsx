@@ -1,5 +1,4 @@
-import React from 'react';
-import { Home, BookOpen, Calendar, CreditCard, Bell, Users, Award, Library, Settings } from 'lucide-react';
+import { Home, BookOpen, Calendar, CreditCard, Bell, Users, Award, Library, Book, UserSquare2 } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: string;
@@ -21,6 +20,20 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
       icon: BookOpen,
       color: 'from-green-500 to-green-600',
       description: 'Notas y progreso'
+    },
+    {
+      id: 'courses',
+      name: 'Cursos',
+      icon: Book,
+      color: 'from-cyan-500 to-cyan-600',
+      description: 'Tus cursos matriculados'
+    },
+    {
+      id: 'teachers',
+      name: 'Profesores',
+      icon: UserSquare2,
+      color: 'from-purple-500 to-purple-600',
+      description: 'Contacto de docentes'
     },
     {
       id: 'schedule',

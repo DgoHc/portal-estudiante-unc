@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Navigation } from './Navigation';
 import { DashboardPage } from '../pages/DashboardPage';
 import { AcademicPage } from '../pages/AcademicPage';
@@ -7,7 +7,8 @@ import { PaymentsSection } from './sections/PaymentsSection';
 import { AnnouncementsSection } from './sections/AnnouncementsSection';
 import { EventsSection } from './sections/EventsSection';
 import { LibrarySection } from './sections/LibrarySection';
-import { QuickActions } from './sections/QuickActions';
+import { CoursesSection } from './sections/CoursesSection';
+import { TeachersSection } from './sections/TeachersSection';
 
 export function Dashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -15,9 +16,29 @@ export function Dashboard() {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <DashboardPage />;
+        return <DashboardPage onTabChange={setActiveTab} />;
       case 'academic':
         return <AcademicPage />;
+      case 'courses':
+        return (
+          <div className="space-y-8">
+            <div className="bg-gradient-to-r from-cyan-600 to-cyan-800 rounded-3xl p-8 text-white shadow-xl">
+              <h1 className="text-4xl font-bold mb-2">Mis Cursos</h1>
+              <p className="text-cyan-100 text-lg">Lista de cursos matriculados</p>
+            </div>
+            <CoursesSection />
+          </div>
+        );
+      case 'teachers':
+        return (
+          <div className="space-y-8">
+            <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-3xl p-8 text-white shadow-xl">
+              <h1 className="text-4xl font-bold mb-2">Profesores</h1>
+              <p className="text-purple-100 text-lg">Información de tus docentes</p>
+            </div>
+            <TeachersSection />
+          </div>
+        );
       case 'schedule':
         return (
           <div className="space-y-8">
@@ -25,7 +46,7 @@ export function Dashboard() {
               <h1 className="text-4xl font-bold mb-2">Horario de Clases</h1>
               <p className="text-purple-100 text-lg">Programación semanal de tus clases</p>
             </div>
-            <ScheduleSection />
+            <ScheduleSection onTabChange={setActiveTab} />
           </div>
         );
       case 'payments':
@@ -45,7 +66,7 @@ export function Dashboard() {
               <h1 className="text-4xl font-bold mb-2">Anuncios y Notificaciones</h1>
               <p className="text-red-100 text-lg">Información importante de la universidad</p>
             </div>
-            <AnnouncementsSection />
+            <AnnouncementsSection onTabChange={setActiveTab} />
           </div>
         );
       case 'events':
@@ -55,7 +76,7 @@ export function Dashboard() {
               <h1 className="text-4xl font-bold mb-2">Eventos y Actividades</h1>
               <p className="text-indigo-100 text-lg">Actividades extracurriculares y eventos académicos</p>
             </div>
-            <EventsSection />
+            <EventsSection onTabChange={setActiveTab} />
           </div>
         );
       case 'library':
@@ -75,11 +96,11 @@ export function Dashboard() {
               <h1 className="text-4xl font-bold mb-2">Acciones Rápidas</h1>
               <p className="text-pink-100 text-lg">Trámites y servicios estudiantiles</p>
             </div>
-            <QuickActions />
+            {/* QuickActions component removed as its functionality is now in DashboardPage */}
           </div>
         );
       default:
-        return <DashboardPage />;
+        return <DashboardPage onTabChange={setActiveTab} />;
     }
   };
 

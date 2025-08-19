@@ -1,7 +1,14 @@
 import React from 'react';
-import { TrendingUp, Calendar, BookOpen, Bell, Users, Award, Clock, CheckCircle } from 'lucide-react';
+import { TrendingUp, Calendar, BookOpen, Bell, Users, Award, Clock, CheckCircle, CreditCard } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-export function DashboardPage() {
+interface DashboardPageProps {
+  onTabChange: (tab: string) => void;
+}
+
+export function DashboardPage({ onTabChange }: DashboardPageProps) {
+  const navigate = useNavigate();
+
   const stats = [
     {
       title: 'Promedio General',
@@ -43,28 +50,34 @@ export function DashboardPage() {
       description: 'Consulta tu horario de clases',
       icon: Calendar,
       color: 'from-blue-500 to-blue-600',
-      action: () => console.log('Ver horario')
+      action: () => onTabChange('schedule')
     },
     {
       title: 'Estado de Pagos',
       description: 'Revisa tus pensiones',
-      icon: Award,
+      icon: CreditCard,
       color: 'from-green-500 to-green-600',
-      action: () => console.log('Estado de pagos')
+      action: () => onTabChange('payments')
     },
     {
       title: 'Descargar Certificado',
       description: 'Obtén tu certificado de estudios',
-      icon: CheckCircle,
+      icon: Award,
       color: 'from-purple-500 to-purple-600',
-      action: () => console.log('Descargar certificado')
+      action: () => {
+        console.log('Descargar certificado');
+        // Aquí iría la lógica para descargar el certificado
+      }
     },
     {
       title: 'Contactar Asesor',
       description: 'Habla con tu asesor académico',
       icon: Users,
       color: 'from-orange-500 to-orange-600',
-      action: () => console.log('Contactar asesor')
+      action: () => {
+        console.log('Contactar asesor');
+        // Aquí iría la lógica para abrir un chat o formulario de contacto
+      }
     }
   ];
 
@@ -82,7 +95,7 @@ export function DashboardPage() {
       title: 'Pago de pensión realizado',
       time: 'Hace 1 día',
       status: 'Confirmado',
-      icon: Award,
+      icon: CreditCard,
       color: 'text-blue-600'
     },
     {
@@ -124,22 +137,25 @@ export function DashboardPage() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <div key={index} className={`bg-gradient-to-br ${stat.bgColor} rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200`}>
-            <div className="flex items-center justify-between mb-4">
-              <div className={`w-12 h-12 bg-gradient-to-br ${stat.color} rounded-xl flex items-center justify-center shadow-sm`}>
-                <stat.icon className="w-6 h-6 text-white" />
+        {stats.map((stat, index) => {
+          const Icon = stat.icon;
+          return (
+            <div key={index} className={`bg-gradient-to-br ${stat.bgColor} rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200`}>
+              <div className="flex items-center justify-between mb-4">
+                <div className={`w-12 h-12 bg-gradient-to-br ${stat.color} rounded-xl flex items-center justify-center shadow-sm`}>
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-sm font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">
+                  {stat.change}
+                </span>
               </div>
-              <span className="text-sm font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">
-                {stat.change}
-              </span>
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
+                <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
-              <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Quick Actions */}
