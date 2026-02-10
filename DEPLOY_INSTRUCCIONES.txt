@@ -1,0 +1,228 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║              🚀 DEPLOY A PRODUCCIÓN - INSTRUCCIONES FINALES               ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📋 REQUISITOS:
+═══════════════════════════════════════════════════════════════════════════
+
+✓ GitHub: DgoHc/portal-estudiante-unc (ya actualizado ✅)
+✓ Railway: https://railway.app (cuenta gratuita)
+✓ Netlify: https://netlify.com (opcional para frontend)
+
+═══════════════════════════════════════════════════════════════════════════
+
+🚀 DEPLOY EN RAILWAY (5 MINUTOS):
+═══════════════════════════════════════════════════════════════════════════
+
+PASO 1: Instalar Railway CLI
+  npm install -g @railway/cli
+
+PASO 2: Conectarse a Railway
+  railway login
+  (Se abrirá navegador, conecta con GitHub)
+
+PASO 3: Crear proyecto
+  railway init
+  
+  Responde:
+  - Nombre: zahkiel-portal
+  - Región: us-west (o más cercana)
+
+PASO 4: Agregar PostgreSQL
+  railway add
+  
+  Selecciona: PostgreSQL
+
+PASO 5: Obtener DATABASE_URL
+  railway variables
+
+  Deberías ver:
+  DATABASE_URL=postgresql://...
+
+PASO 6: Configurar variables de entorno
+  railway variables set NODE_ENV=production
+  railway variables set JWT_SECRET=genera_aqui_32_caracteres_aleatorios
+  railway variables set JWT_REFRESH_SECRET=genera_aqui_otro_secret
+  railway variables set FRONTEND_URL=https://zahkiel-portal.netlify.app
+
+PASO 7: Deployar
+  railway up
+
+  Espera a que compile y depliegue (~3 minutos)
+
+PASO 8: Migraciones de BD
+  railway run npx prisma migrate deploy
+
+PASO 9: Obtener URL
+  railway status
+  
+  Verás tu URL de deployed en OUTPUT_URL
+
+═══════════════════════════════════════════════════════════════════════════
+
+✅ TU APLICACIÓN ESTARÁ EN:
+═══════════════════════════════════════════════════════════════════════════
+
+https://zahkiel-portal.up.railway.app
+
+(La URL exacta aparecerá en railway status)
+
+═══════════════════════════════════════════════════════════════════════════
+
+🧪 VERIFICAR QUE FUNCIONA:
+═══════════════════════════════════════════════════════════════════════════
+
+1. Test Health
+   GET https://zahkiel-portal.up.railway.app/health
+   
+   Respuesta esperada:
+   { "status": "OK", "timestamp": "..." }
+
+2. Test Login
+   POST https://zahkiel-portal.up.railway.app/api/auth/login
+   
+   Body:
+   {
+     "email": "admin@zahkiel.com",
+     "password": "123456"
+   }
+   
+   Respuesta esperada:
+   {
+     "token": "eyJh...",
+     "refreshToken": "eyJh...",
+     "user": { "id": "...", "role": "admin" }
+   }
+
+3. Test Protegido
+   GET https://zahkiel-portal.up.railway.app/api/profile
+   Header: Authorization: Bearer {token}
+   
+   Respuesta esperada:
+   { "user": { "id": "...", "role": "admin" } }
+
+═══════════════════════════════════════════════════════════════════════════
+
+📱 DEPLOY FRONTEND (OPCIONAL - Netlify):
+═══════════════════════════════════════════════════════════════════════════
+
+1. Ve a https://netlify.com
+2. Conecta tu GitHub (DgoHc/portal-estudiante-unc)
+3. Build settings:
+   - Build command: npm run build
+   - Publish directory: dist
+4. Deploy
+
+Tu frontend estará en: https://zahkiel-portal.netlify.app
+
+═══════════════════════════════════════════════════════════════════════════
+
+🔐 VARIABLES DE ENTORNO (YA CONFIGURADAS):
+═══════════════════════════════════════════════════════════════════════════
+
+En Railway:
+  ✓ NODE_ENV = production
+  ✓ PORT = 5000
+  ✓ JWT_SECRET = {tu_secret}
+  ✓ JWT_REFRESH_SECRET = {tu_refresh_secret}
+  ✓ DATABASE_URL = postgresql://...
+  ✓ FRONTEND_URL = https://zahkiel-portal.netlify.app
+
+═══════════════════════════════════════════════════════════════════════════
+
+📊 MONITOREAR APLICACIÓN:
+═══════════════════════════════════════════════════════════════════════════
+
+Desde Railway:
+  1. Ve a https://railway.app
+  2. Selecciona "zahkiel-portal"
+  3. Ver:
+     - Logs en tiempo real
+     - CPU/Memoria
+     - Status de la BD
+     - Variables de entorno
+
+═══════════════════════════════════════════════════════════════════════════
+
+🔄 ACTUALIZAR DESPUÉS DE CAMBIOS:
+═══════════════════════════════════════════════════════════════════════════
+
+En local:
+  git add .
+  git commit -m "feat: nuevo cambio"
+  git push origin main
+
+En Railway:
+  railway up
+
+O automáticamente (si habilitaste auto-deploy desde GitHub)
+
+═══════════════════════════════════════════════════════════════════════════
+
+🆘 PROBLEMAS COMUNES:
+═══════════════════════════════════════════════════════════════════════════
+
+"Build failed: npm ERR!"
+  railway run npm install
+  railway up
+
+"DATABASE_URL not found"
+  railway variables set DATABASE_URL=postgresql://...
+
+"Migraciones fallidas"
+  railway run npx prisma migrate reset --force
+  railway run npx prisma migrate deploy
+
+"Aplicación arranca pero no funciona BD"
+  railway run npm run test-db
+
+═══════════════════════════════════════════════════════════════════════════
+
+💰 COSTOS ESTIMADOS:
+═══════════════════════════════════════════════════════════════════════════
+
+Railway: $5 USD gratis/mes (después $1-3 USD)
+Netlify: Gratuito
+Total: $0-5 USD/mes
+
+═══════════════════════════════════════════════════════════════════════════
+
+📚 ARCHIVOS IMPORTANTES EN GITHUB:
+═══════════════════════════════════════════════════════════════════════════
+
+https://github.com/DgoHc/portal-estudiante-unc
+
+Incluye:
+  ✓ DEPLOY_GUIDE.md - Guía completa
+  ✓ deploy-railway.bat - Script Windows
+  ✓ deploy-railway.sh - Script Linux/Mac
+  ✓ backend/railway.toml - Configuración deploy
+  ✓ database/setup_auth.sql - Script de BD
+  ✓ Toda la documentación de setup
+
+═══════════════════════════════════════════════════════════════════════════
+
+✅ RESUMEN:
+═══════════════════════════════════════════════════════════════════════════
+
+BD:               ✅ PostgreSQL en Railway
+Backend:          ✅ Express en Railway
+Frontend:         ⚙️  Listo para Netlify
+Documentación:    ✅ Completa
+
+TODO LISTO PARA PRODUCCIÓN 🎉
+
+═══════════════════════════════════════════════════════════════════════════
+
+🚀 SIGUIENTE PASO:
+
+Abre PowerShell y ejecuta:
+  railway login
+  cd c:\Users\DIEGO\EstudiantesPla\ZahkielAP
+  railway init
+
+¡Listo! 🎉
+
+═══════════════════════════════════════════════════════════════════════════
