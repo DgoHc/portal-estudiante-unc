@@ -1,0 +1,11 @@
+{
+  "name": "zahkiel-frontend",
+  "buildCommand": "npm run build",
+  "publishDirectory": "dist",
+  "outputDirectory": "dist",
+  "devCommand": "npm run dev",
+  "env": {
+    "CI": "true",
+    "VITE_API_URL": "@DATABASE_URL"
+  }
+}
