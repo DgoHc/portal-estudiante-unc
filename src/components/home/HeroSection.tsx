@@ -14,11 +14,11 @@ export const HeroSection: React.FC = () => {
         <div className="flex flex-col items-center justify-center mb-6">
           <Brain className="w-24 h-24 text-white mb-4 animate-bounce-slow" /> {/* Icono de Brain */}
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 tracking-tight">
-            UNCiaBot: Tu Asistente Universitario Inteligente
+            Zahkiel la plataforma adaptada a tu mejor desarrollo
           </h1>
         </div>
         <p className="text-xl sm:text-2xl font-light mb-10 max-w-4xl mx-auto opacity-90">
-          Simplificando la vida académica para estudiantes y docentes de la UNC con el poder de la Inteligencia Artificial.
+          Simplificando la vida académica para estudiantes y docentes de Angelitos de Dios con el poder de la Inteligencia Artificial.
         </p>
         <Link
           to="/login"

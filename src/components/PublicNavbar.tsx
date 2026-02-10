@@ -20,9 +20,9 @@ export function PublicNavbar() {
               </div>
               <div className="hidden md:block">
                 <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                  UNCiaBot
+                  Zahkiel
                 </h1>
-                <p className="text-sm text-gray-600 font-medium">Asistente Universitario</p>
+                <p className="text-sm text-gray-600 font-medium">Aplicación educativa</p>
               </div>
             </Link>
           </div>

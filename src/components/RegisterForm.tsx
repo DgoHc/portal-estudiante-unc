@@ -131,7 +131,7 @@ export function RegisterForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-gray-700 text-gray-200 placeholder-gray-500"
-                  placeholder="tu@unc.edu.pe"
+                  placeholder="tu@colegio.edu.pe"
                   required
                 />
               </div>

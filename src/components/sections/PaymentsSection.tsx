@@ -36,7 +36,7 @@ export function PaymentsSection() {
       icon: TrendingUp,
       color: 'from-green-500 to-green-600',
       bgColor: 'bg-green-100',
-      detail: 'En el ciclo actual.'
+      detail: 'En el año actual.'
     },
     {
       label: 'Pendiente',

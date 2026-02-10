@@ -11,13 +11,13 @@ function ChatWidget() {
       defaultLanguage: 'en',
       initialMessages: [
         '¡Hola! 👋',
-        'Soy tu asistente virtual de la Universidad Nacional de Cajamarca. ¿En qué puedo ayudarte hoy?'
+        'Soy tu asistente virtual del Colegio Secundario. ¿En qué puedo ayudarte hoy?'
       ],
       i18n: {
         en: {
           title: '¡Hola! 👋',
           subtitle: 'Soy tu asistente virtual de la UNC. Estoy aquí para ayudarte 24/7.',
-          footer: 'Universidad Nacional de Cajamarca',
+          footer: 'Colegio',
           getStarted: 'Nueva Conversación',
           inputPlaceholder: 'Escribe tu pregunta...',
           closeButtonTooltip: 'Cerrar chat'
@@ -26,7 +26,7 @@ function ChatWidget() {
       metadata: {
         userId: '202015001',
         userType: 'student',
-        institution: 'Universidad Nacional de Cajamarca'
+        institution: 'Colegio Secundario'
       },
       webhookConfig: {
         method: 'POST',

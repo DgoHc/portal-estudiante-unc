@@ -8,8 +8,10 @@ interface StudentProfile {
   id: string;
   name: string;
   code: string;
-  career: string;
-  semester: number;
+  grade: string;
+  mathLevel: 'básico' | 'intermedio' | 'avanzado';
+  communicationLevel: 'básico' | 'intermedio' | 'avanzado';
+  assessmentCompleted: boolean;
   email: string;
   phone: string;
   avatar_url?: string;
@@ -101,7 +103,7 @@ export default function ProfilePage() {
             </div>
             <div>
               <h1 className="text-3xl font-bold">{profile?.name || 'Perfil'}</h1>
-              <p className="text-blue-100">{profile?.career}</p>
+              <p className="text-blue-100">{profile?.grade}</p>
               {profile?.bio && (
                 <p className="text-blue-200 mt-2 max-w-md">{profile.bio}</p>
               )}
@@ -132,7 +134,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex items-center space-x-3">
                     <GraduationCap className="w-5 h-5 text-purple-600" />
-                    <span className="font-medium">Semestre: {profile.semester}</span>
+                    <span className="font-medium">Grado: {profile.grade}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Mail className="w-5 h-5 text-green-600" />

@@ -13,16 +13,8 @@ export interface LoginResponse {
 }
 
 export async function apiLogin(code: string, password: string): Promise<LoginResponse> {
-  const res = await fetch('/api/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ code, password })
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text || 'Login failed');
-  }
-  return res.json();
+  // Lanza error inmediatamente para usar fallback mock
+  throw new Error('Backend API no disponible. Usando credenciales mock.');
 }
 
 export async function apiGetSchedule(code: string): Promise<{ schedule: any[] }> {

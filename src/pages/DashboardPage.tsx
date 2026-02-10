@@ -1,6 +1,7 @@
 import React from 'react';
-import { TrendingUp, Calendar, BookOpen, Bell, Users, Award, Clock, CheckCircle, CreditCard } from 'lucide-react';
+import { TrendingUp, BookOpen, Target, Award, Clock, CheckCircle, Calculator, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 interface DashboardPageProps {
   onTabChange: (tab: string) => void;
@@ -8,37 +9,38 @@ interface DashboardPageProps {
 
 export function DashboardPage({ onTabChange }: DashboardPageProps) {
   const navigate = useNavigate();
+  const { student } = useAuth();
 
   const stats = [
     {
-      title: 'Promedio General',
-      value: '16.8',
+      title: 'Nivel Matemática',
+      value: student?.mathLevel || 'básico',
       change: '+0.3',
-      icon: TrendingUp,
+      icon: Calculator,
       color: 'from-green-500 to-green-600',
       bgColor: 'from-green-50 to-emerald-50'
     },
     {
-      title: 'Créditos Aprobados',
-      value: '18',
-      change: '+3',
-      icon: BookOpen,
+      title: 'Nivel Comunicación',
+      value: student?.communicationLevel || 'básico',
+      change: '+0.3',
+      icon: MessageSquare,
       color: 'from-blue-500 to-blue-600',
       bgColor: 'from-blue-50 to-indigo-50'
     },
     {
-      title: 'Próximas Clases',
-      value: '3',
-      change: 'Hoy',
-      icon: Calendar,
+      title: 'Ejercicios Completados',
+      value: '15',
+      change: '+3',
+      icon: CheckCircle,
       color: 'from-purple-500 to-purple-600',
       bgColor: 'from-purple-50 to-violet-50'
     },
     {
-      title: 'Anuncios Nuevos',
-      value: '5',
-      change: '+2',
-      icon: Bell,
+      title: 'Tiempo Estudiado',
+      value: '2.5h',
+      change: '+0.5h',
+      icon: Clock,
       color: 'from-orange-500 to-orange-600',
       bgColor: 'from-orange-50 to-amber-50'
     }
@@ -46,64 +48,58 @@ export function DashboardPage({ onTabChange }: DashboardPageProps) {
 
   const quickActions = [
     {
-      title: 'Ver Horario',
-      description: 'Consulta tu horario de clases',
-      icon: Calendar,
+      title: 'Practicar Matemática',
+      description: 'Ejercicios adaptados a tu nivel',
+      icon: Calculator,
       color: 'from-blue-500 to-blue-600',
-      action: () => onTabChange('schedule')
+      action: () => onTabChange('mathematics')
     },
     {
-      title: 'Estado de Pagos',
-      description: 'Revisa tus pensiones',
-      icon: CreditCard,
+      title: 'Practicar Comunicación',
+      description: 'Lectura y escritura personalizada',
+      icon: MessageSquare,
       color: 'from-green-500 to-green-600',
-      action: () => onTabChange('payments')
+      action: () => onTabChange('communication')
     },
     {
-      title: 'Descargar Certificado',
-      description: 'Obtén tu certificado de estudios',
-      icon: Award,
+      title: 'Ver Progreso',
+      description: 'Revisa tu avance',
+      icon: TrendingUp,
       color: 'from-purple-500 to-purple-600',
-      action: () => {
-        console.log('Descargar certificado');
-        // Aquí iría la lógica para descargar el certificado
-      }
+      action: () => onTabChange('progress')
     },
     {
-      title: 'Contactar Asesor',
-      description: 'Habla con tu asesor académico',
-      icon: Users,
+      title: 'Configuración',
+      description: 'Ajustes de cuenta',
+      icon: Award,
       color: 'from-orange-500 to-orange-600',
-      action: () => {
-        console.log('Contactar asesor');
-        // Aquí iría la lógica para abrir un chat o formulario de contacto
-      }
+      action: () => onTabChange('configuracion')
     }
   ];
 
   const recentActivity = [
     {
-      type: 'class',
-      title: 'Clase de Programación Web',
+      type: 'math',
+      title: 'Ejercicio de álgebra completado',
       time: 'Hace 2 horas',
-      status: 'Completada',
+      status: 'Completado',
       icon: CheckCircle,
       color: 'text-green-600'
     },
     {
-      type: 'payment',
-      title: 'Pago de pensión realizado',
+      type: 'comm',
+      title: 'Lectura de comprensión finalizada',
       time: 'Hace 1 día',
-      status: 'Confirmado',
-      icon: CreditCard,
+      status: 'Aprobado',
+      icon: BookOpen,
       color: 'text-blue-600'
     },
     {
-      type: 'announcement',
-      title: 'Nuevo anuncio: Cambio de horario',
+      type: 'progress',
+      title: 'Nuevo nivel alcanzado en Matemática',
       time: 'Hace 2 días',
-      status: 'Importante',
-      icon: Bell,
+      status: '¡Felicidades!',
+      icon: Award,
       color: 'text-orange-600'
     }
   ];
@@ -118,8 +114,8 @@ export function DashboardPage({ onTabChange }: DashboardPageProps) {
         
         <div className="relative z-10 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">¡Bienvenido de vuelta!</h1>
-            <p className="text-blue-100 text-xl mb-6">Aquí tienes un resumen completo de tu actividad académica</p>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">¡Bienvenido, {student?.name}!</h1>
+            <p className="text-blue-100 text-xl mb-6">Aquí tienes un resumen de tu progreso en Matemática y Comunicación</p>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full">
                 <Clock className="w-5 h-5" />

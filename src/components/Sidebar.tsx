@@ -1,5 +1,5 @@
 import React from 'react';
-import { GraduationCap, Calendar, Book, Bell, CreditCard, LogOut, Home, FileText, Users, Settings, TrendingUp, MessageCircle } from 'lucide-react';
+import { GraduationCap, Calculator, MessageSquare, LogOut, Home, FileText, Users, Settings, TrendingUp, MessageCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Sidebar() {
@@ -7,12 +7,9 @@ export default function Sidebar() {
 
   const menuItems = [
     { icon: Home, label: 'Dashboard', href: '#dashboard', color: 'from-blue-500 to-blue-600' },
-    { icon: Calendar, label: 'Horario', href: '#schedule', color: 'from-green-500 to-green-600' },
-    { icon: Book, label: 'Cursos', href: '#courses', color: 'from-purple-500 to-purple-600' },
-    { icon: FileText, label: 'Anuncios', href: '#announcements', color: 'from-orange-500 to-orange-600' },
-    { icon: CreditCard, label: 'Pagos', href: '#payments', color: 'from-red-500 to-red-600' },
-    { icon: Users, label: 'Profesores', href: '#teachers', color: 'from-indigo-500 to-indigo-600' },
-    { icon: MessageCircle, label: 'Comunidad', href: '#community', color: 'from-sky-500 to-sky-600' },
+    { icon: Calculator, label: 'Matemática', href: '#mathematics', color: 'from-green-500 to-green-600' },
+    { icon: MessageSquare, label: 'Comunicación', href: '#communication', color: 'from-purple-500 to-purple-600' },
+    { icon: TrendingUp, label: 'Progreso', href: '#progress', color: 'from-orange-500 to-orange-600' },
     { icon: Settings, label: 'Configuración', href: '#configuracion', color: 'from-gray-500 to-gray-600' },
   ];
 
@@ -41,12 +38,18 @@ export default function Sidebar() {
           <div>
             <h3 className="font-bold text-gray-100 text-lg">{student?.name}</h3>
             <p className="text-sm text-gray-300 font-medium">{student?.code}</p>
-            <p className="text-xs text-gray-400 mt-1">{student?.career}</p>
+            <p className="text-xs text-gray-400 mt-1">{student?.grade}</p>
           </div>
           <div className="w-full bg-gray-800 rounded-lg p-3 shadow-sm border border-gray-700">
             <div className="flex justify-between items-center">
-              <span className="text-xs text-gray-300">Semestre</span>
-              <span className="text-sm font-bold text-blue-400">{student?.semester}</span>
+              <span className="text-xs text-gray-300">Matemática</span>
+              <span className="text-sm font-bold text-blue-400">{student?.mathLevel}</span>
+            </div>
+          </div>
+          <div className="w-full bg-gray-800 rounded-lg p-3 shadow-sm border border-gray-700">
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-gray-300">Comunicación</span>
+              <span className="text-sm font-bold text-green-400">{student?.communicationLevel}</span>
             </div>
           </div>
         </div>
@@ -80,11 +83,11 @@ export default function Sidebar() {
         <div className="bg-gradient-to-br from-green-900 to-emerald-900 rounded-xl p-4 border border-green-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-200">Promedio</p>
-              <p className="text-2xl font-bold text-green-300">16.8</p>
+              <p className="text-sm font-medium text-gray-200">Matemática</p>
+              <p className="text-2xl font-bold text-green-300">{student?.mathLevel}</p>
             </div>
             <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-700 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-white" />
+              <Calculator className="w-6 h-6 text-white" />
             </div>
           </div>
         </div>
@@ -92,11 +95,11 @@ export default function Sidebar() {
         <div className="bg-gradient-to-br from-blue-900 to-indigo-900 rounded-xl p-4 border border-blue-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-200">Créditos</p>
-              <p className="text-2xl font-bold text-blue-300">18</p>
+              <p className="text-sm font-medium text-gray-200">Comunicación</p>
+              <p className="text-2xl font-bold text-blue-300">{student?.communicationLevel}</p>
             </div>
             <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-              <Book className="w-6 h-6 text-white" />
+              <MessageSquare className="w-6 h-6 text-white" />
             </div>
           </div>
         </div>

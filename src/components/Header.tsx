@@ -21,8 +21,8 @@ export function Header() {
               <GraduationCap className="w-7 h-7 text-white" />
             </div>
             <div className="hidden md:block">
-              <h1 className="text-xl font-bold text-white">Universidad Nacional de Cajamarca</h1>
-              <p className="text-sm text-gray-300 font-medium">Facultad de Ingeniería de Sistemas</p>
+              <h1 className="text-xl font-bold text-white">ZahKiel</h1>
+              <p className="text-sm text-gray-300 font-medium">Plataforma de Inteligencia Artificial</p>
             </div>
           </div>
           
@@ -115,7 +115,7 @@ export function Header() {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-100">{student.name}</p>
-                    <p className="text-sm text-gray-300">{student.code} - {student.career}</p>
+                    <p className="text-sm text-gray-300">{student.code} - {student.grade}</p>
                   </div>
                 </div>
                 <button 

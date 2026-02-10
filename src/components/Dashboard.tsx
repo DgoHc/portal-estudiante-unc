@@ -10,9 +10,13 @@ import { LibrarySection } from './sections/LibrarySection';
 import { CoursesSection } from './sections/CoursesSection';
 import { TeachersSection } from './sections/TeachersSection';
 import { CommunitySection } from './sections/CommunitySection';
+import { MathematicsSection } from './sections/MathematicsSection';
+import { CommunicationSection } from './sections/CommunicationSection';
+import { useAuth } from '../contexts/AuthContext';
 
 export function Dashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const { student } = useAuth();
 
   // listen for sidebar navigate
   useEffect(() => {
@@ -30,6 +34,45 @@ export function Dashboard() {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardPage onTabChange={setActiveTab} />;
+      case 'mathematics':
+        return <MathematicsSection />;
+      case 'communication':
+        return <CommunicationSection />;
+      case 'progress':
+        return (
+          <div className="space-y-8">
+            <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-3xl p-8 text-white shadow-xl">
+              <h1 className="text-4xl font-bold mb-2">Mi Progreso</h1>
+              <p className="text-purple-100 text-lg">Revisa tu avance en Matemática y Comunicación</p>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <h3 className="font-bold text-gray-900 text-xl mb-4">Niveles Actuales</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-blue-600 mb-2">{student?.mathLevel}</div>
+                  <p className="text-gray-600">Nivel en Matemática</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-green-600 mb-2">{student?.communicationLevel}</div>
+                  <p className="text-gray-600">Nivel en Comunicación</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <h3 className="font-bold text-gray-900 text-xl mb-4">Estadísticas Generales</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-blue-600 mb-2">75%</div>
+                  <p className="text-gray-600">Ejercicios Completados</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-green-600 mb-2">12h</div>
+                  <p className="text-gray-600">Tiempo Estudiado</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       case 'academic':
         return <AcademicPage />;
       case 'courses':
@@ -77,7 +120,7 @@ export function Dashboard() {
           <div className="space-y-8">
             <div className="bg-gradient-to-r from-red-600 to-red-800 rounded-3xl p-8 text-white shadow-xl">
               <h1 className="text-4xl font-bold mb-2">Anuncios y Notificaciones</h1>
-              <p className="text-red-100 text-lg">Información importante de la universidad</p>
+              <p className="text-red-100 text-lg">Información importante del colegio</p>
             </div>
             <AnnouncementsSection onTabChange={setActiveTab} />
           </div>

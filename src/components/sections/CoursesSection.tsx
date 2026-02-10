@@ -23,7 +23,7 @@ export const CoursesSection: React.FC = () => {
     {
       id: 'c002',
       name: 'Matemática Discreta',
-      professor: 'Lic. Carlos M. Vega',
+      professor: 'Prof. Carlos M. Vega',
       code: 'MA203',
       credits: 3,
       schedule: 'Ma/Ju 08:00 - 09:30',
@@ -39,7 +39,7 @@ export const CoursesSection: React.FC = () => {
     {
       id: 'c004',
       name: 'Bases de Datos I',
-      professor: 'Mg. Roberto P. Torres',
+      professor: 'Prof. Roberto P. Torres',
       code: 'DB301',
       credits: 3,
       schedule: 'Ma/Ju 16:00 - 17:30',
@@ -66,7 +66,7 @@ export const CoursesSection: React.FC = () => {
             </p>
             <div className="flex justify-between items-center mt-4 text-sm text-gray-600">
               <span>Código: <span className="font-medium text-gray-800">{course.code}</span></span>
-              <span>Créditos: <span className="font-medium text-gray-800">{course.credits}</span></span>
+              <span>Asignaturas: <span className="font-medium text-gray-800">{course.credits}</span></span>
             </div>
           </div>
         ))}

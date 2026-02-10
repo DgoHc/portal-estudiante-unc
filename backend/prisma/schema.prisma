@@ -1,0 +1,173 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  admin
+  teacher
+  student
+  parent
+}
+
+enum ContentStatus {
+  pending
+  generating
+  completed
+  error
+  reviewing
+  approved
+  rejected
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         UserRole
+  firstName    String
+  lastName     String
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relaciones
+  student      Student?
+  teacher      Teacher?
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+}
+
+model Student {
+  id          String   @id
+  user        User     @relation(fields: [id], references: [id])
+  grade       String
+  section     String
+  dateOfBirth DateTime
+  parentId    String?
+  profile     Json?
+
+  // Relaciones
+  courses     Enrollment[]
+  evaluations EvaluationResult[]
+  contents    PersonalizedContent[]
+}
+
+model Teacher {
+  id         String   @id
+  user       User     @relation(fields: [id], references: [id])
+  specialties String[]
+  bio        String?
+
+  // Relaciones
+  courses    Course[]
+  contents   PersonalizedContent[]
+}
+
+model Course {
+  id        String   @id @default(uuid())
+  name      String
+  code      String   @unique
+  grade     String
+  year      Int
+  teacherId String
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  teacher     Teacher      @relation(fields: [teacherId], references: [id])
+  students    Enrollment[]
+  subjects    Subject[]
+}
+
+model Subject {
+  id          String   @id @default(uuid())
+  name        String
+  code        String   @unique
+  description String?
+  courseId    String
+  createdAt   DateTime @default(now())
+
+  // Relaciones
+  course      Course       @relation(fields: [courseId], references: [id])
+  evaluations Evaluation[]
+}
+
+model Enrollment {
+  studentId  String
+  courseId   String
+  enrolledAt DateTime @default(now())
+  status     String   @default("active")
+
+  // Relaciones
+  student    Student  @relation(fields: [studentId], references: [id])
+  course     Course   @relation(fields: [courseId], references: [id])
+
+  @@id([studentId, courseId])
+}
+
+model Evaluation {
+  id          String   @id @default(uuid())
+  subjectId   String
+  title       String
+  description String?
+  dueDate     DateTime?
+  maxScore    Float
+  weight      Float
+  createdBy   String
+  createdAt   DateTime @default(now())
+
+  // Relaciones
+  subject     Subject           @relation(fields: [subjectId], references: [id])
+  results     EvaluationResult[]
+}
+
+model EvaluationResult {
+  id           String    @id @default(uuid())
+  evaluationId String
+  studentId    String
+  score        Float?
+  feedback     String?
+  submittedAt  DateTime?
+  gradedAt     DateTime?
+  gradedBy     String?
+
+  // Relaciones
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id])
+  student      Student    @relation(fields: [studentId], references: [id])
+}
+
+model Message {
+  id          String    @id @default(uuid())
+  senderId    String
+  recipientId String
+  subject     String
+  content     String
+  readAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  // Relaciones
+  sender      User      @relation("SentMessages", fields: [senderId], references: [id])
+  recipient   User      @relation("ReceivedMessages", fields: [recipientId], references: [id])
+}
+
+model PersonalizedContent {
+  id              String        @id @default(uuid())
+  studentId       String
+  teacherId       String
+  promptData      Json
+  content         Json?
+  status          ContentStatus @default(pending)
+  reviewStatus    String?
+  reviewFeedback  String?
+  createdAt       DateTime      @default(now())
+  completedAt     DateTime?
+  reviewedAt      DateTime?
+
+  // Relaciones
+  student         Student       @relation(fields: [studentId], references: [id])
+  teacher         Teacher       @relation(fields: [teacherId], references: [id])
+}

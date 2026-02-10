@@ -4,28 +4,10 @@ import { Github, Linkedin } from 'lucide-react'; // Assuming we might want socia
 export const TeamSection: React.FC = () => {
   const teamMembers = [
     {
-      name: 'André Díaz',
-      role: 'Responsable del diseño de funcionalidades y arquitectura del sistema',
-      description: 'Lideró la conceptualización y estructura del asistente, asegurando una experiencia de usuario fluida.',
-      image: 'https://randomuser.me/api/portraits/men/32.jpg', // Generic placeholder
-    },
-    {
       name: 'Diego Hoyos',
-      role: 'Desarrollo del Backend e Integración de APIs',
-      description: 'Clave en la construcción de la infraestructura que conecta UNCiaBot con los servicios universitarios.',
+      role: 'Desarrollo y control total de la Plataforma',
+      description: 'Clave en la construcción de la infraestructura que conecta Zahkiel con los servicios del colegio.',
       image: 'https://randomuser.me/api/portraits/men/33.jpg', // Generic placeholder
-    },
-    {
-      name: 'Hans Graciano',
-      role: 'Implementación de IA y PLN',
-      description: 'Encargado de dotar al bot de la capacidad de entender y responder de manera inteligente.',
-      image: 'https://randomuser.me/api/portraits/men/34.jpg', // Generic placeholder
-    },
-    {
-      name: 'Julio Vásquez',
-      role: 'Pruebas de Calidad y Documentación',
-      description: 'Aseguró la fiabilidad del sistema y la claridad en toda la documentación del proyecto.',
-      image: 'https://randomuser.me/api/portraits/men/35.jpg', // Generic placeholder
     },
   ];
 

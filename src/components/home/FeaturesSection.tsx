@@ -24,7 +24,7 @@ export const FeaturesSection: React.FC = () => {
     {
       icon: Calendar,
       title: 'Calendario Académico',
-      description: 'Accede rápidamente a las fechas clave del ciclo académico.',
+      description: 'Accede rápidamente a las fechas clave del año escolar.',
       color: 'text-red-500',
     },
     {
@@ -45,7 +45,7 @@ export const FeaturesSection: React.FC = () => {
     <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-100 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12 text-gray-900 dark:text-gray-100">
-          Funcionalidades Clave de UNCiaBot
+          Funcionalidades Clave de Zahkiel
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (

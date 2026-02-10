@@ -78,7 +78,7 @@ npm run build
 ### Variables de Entorno
 ```env
 VITE_N8N_WEBHOOK_URL=https://tu-webhook.n8n.cloud/webhook/chat
-VITE_APP_TITLE=Portal Estudiante UNC
+VITE_APP_TITLE=Zahkiel
 ```
 
 ### Configuración del Chat (n8n)

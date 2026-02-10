@@ -8,10 +8,10 @@ export const CallToActionSection: React.FC = () => {
       <div className="max-w-4xl mx-auto">
         <Rocket className="w-24 h-24 mx-auto mb-6 text-white animate-pulse-slow" />
         <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 leading-tight">
-          ¿Listo para Experimentar UNCiaBot?
+          ¿Listo para Experimentar ZahKiel?
         </h2>
         <p className="text-xl sm:text-2xl font-light mb-10 opacity-90">
-          Únete a la revolución académica y descubre cómo UNCiaBot puede transformar tu experiencia universitaria.
+          Únete a la revolución académica y descubre cómo ZahKiel puede transformar a tu rendimiento académico.
         </p>
         <Link
           to="/login"

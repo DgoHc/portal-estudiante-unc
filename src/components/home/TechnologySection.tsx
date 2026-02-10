@@ -22,12 +22,12 @@ export const TechnologySection: React.FC = () => {
           <div className="flex flex-col items-center p-6 bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md">
             <Cloud className="w-16 h-16 text-blue-600 mb-4" />
             <h3 className="text-xl font-semibold mb-2">Integración de APIs</h3>
-            <p className="text-gray-700 dark:text-gray-300 text-sm">Conexión fluida con sistemas universitarios existentes.</p>
+            <p className="text-gray-700 dark:text-gray-300 text-sm">Conexión fluida con sistemas escolares existentes.</p>
           </div>
         </div>
         <div className="max-w-3xl mx-auto text-lg leading-relaxed text-gray-700 dark:text-gray-300">
           <p className="mb-4">
-            UNCiaBot ha sido desarrollado con un enfoque en la eficiencia y la innovación, utilizando una combinación de herramientas potentes y de código abierto. Nuestro equipo ha apostado por un desarrollo remoto y colaborativo, logrando una solución impactante sin un presupuesto significativo, demostrando cómo los recursos gratuitos y la creatividad pueden generar valor real.
+            Zahkiel ha sido desarrollado con un enfoque en la eficiencia y la innovación, utilizando una combinación de herramientas potentes y de código abierto. Nuestro equipo ha apostado por un desarrollo remoto y colaborativo, logrando una solución impactante sin un presupuesto significativo, demostrando cómo los recursos gratuitos y la creatividad pueden generar valor real.
           </p>
           <p>
             Nuestro enfoque ágil nos ha permitido adaptarnos rápidamente y construir una herramienta robusta y escalable, preparada para las necesidades cambiantes de la comunidad universitaria.

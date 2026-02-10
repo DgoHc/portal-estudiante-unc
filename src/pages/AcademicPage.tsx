@@ -14,13 +14,13 @@ export function AcademicPage() {
       detail: 'Basado en cursos completados'
     },
     {
-      title: 'Créditos Aprobados',
+      title: 'Asignaturas Aprobadas',
       value: '18',
       change: '+3',
       icon: BookOpen,
       color: 'from-blue-500 to-blue-600',
       bgColor: 'bg-blue-100',
-      description: 'De 24 créditos totales del ciclo',
+      description: 'De 24 asignaturas totales del año',
       detail: 'Necesitas 60 para egresar'
     },
     {
@@ -30,7 +30,7 @@ export function AcademicPage() {
       icon: Clock,
       color: 'from-orange-500 to-orange-600',
       bgColor: 'bg-orange-100',
-      description: 'Cursos del ciclo actual',
+      description: 'Cursos del año actual',
       detail: 'Revisa tus fechas límite'
     },
     {
@@ -103,7 +103,7 @@ export function AcademicPage() {
   const achievements = [
     {
       title: 'Excelencia Académica',
-      description: 'Mantuviste un promedio superior a 16.0 en el ciclo anterior.',
+      description: 'Mantuviste un promedio superior a 16.0 en el año anterior.',
       icon: Award,
       color: 'from-yellow-500 to-yellow-600',
       achieved: true,
@@ -111,7 +111,7 @@ export function AcademicPage() {
     },
     {
       title: 'Asistencia Perfecta',
-      description: 'Lograste 100% de asistencia en 3 cursos durante el ciclo.',
+      description: 'Lograste 100% de asistencia en 3 cursos durante el año.',
       icon: CheckCircle,
       color: 'from-green-500 to-green-600',
       achieved: true,
@@ -142,7 +142,7 @@ export function AcademicPage() {
             <div className="flex items-center space-x-4 justify-center md:justify-start">
               <div className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full">
                 <GraduationCap className="w-5 h-5" />
-                <span>Ingeniería de Sistemas - 6to Ciclo</span>
+                <span>3ro de Secundaria</span>
               </div>
             </div>
           </div>
@@ -183,7 +183,7 @@ export function AcademicPage() {
       <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
         <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 border-b border-gray-200">
           <h2 className="text-2xl font-bold text-gray-900">Cursos en Progreso</h2>
-          <p className="text-gray-600">Estado actual de tus cursos del ciclo</p>
+          <p className="text-gray-600">Estado actual de tus cursos del año</p>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -192,7 +192,7 @@ export function AcademicPage() {
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="font-bold text-gray-900 text-lg">{course.name}</h3>
-                    <p className="text-gray-600 text-sm">{course.code} • {course.credits} créditos</p>
+                    <p className="text-gray-600 text-sm">{course.code} • {course.credits} asignaturas</p>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold text-gray-900">{course.grade}</div>
