@@ -1,0 +1,105 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║                 🚀 DEPLOY A RAILWAY - PASO A PASO                        ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+⚠️ IMPORTANTE: Railway requiere autenticación manual por browser
+
+═══════════════════════════════════════════════════════════════════════════
+
+PASO 1: Abre tu navegador y ve a:
+   https://railway.app
+
+PASO 2: Si no tienes cuenta:
+   ├─ Haz clic en "Sign Up"
+   ├─ Conecta con GitHub (DgoHc)
+   └─ Autoriza Railway
+
+PASO 3: Copia tu API token:
+   ├─ Ve a: https://railway.app/account/tokens
+   ├─ Haz clic en "Create New Token"
+   ├─ Copia el token (es IMPORTANTE)
+   └─ Guárdalo en un lugar seguro
+
+PASO 4: En PowerShell, pega el token:
+   $env:RAILWAY_TOKEN = "tu_token_aqui"
+
+PASO 5: Ahora ejecuta:
+   railway init --name zahkiel-portal
+
+PASO 6: Responde:
+   - Project: zahkiel-portal (Enter)
+   - Environment: Production (Enter)
+
+PASO 7: Agrega PostgreSQL:
+   railway add
+
+   Selecciona: PostgreSQL (Arrow keys + Enter)
+
+PASO 8: Configura variables de entorno:
+   railway variables set NODE_ENV=production
+   railway variables set JWT_SECRET=tu_secret_super_largo_aqui_32_chars_minimo
+   railway variables set JWT_REFRESH_SECRET=otro_secret_super_largo_aqui_32_chars
+
+PASO 9: Deployar:
+   railway up
+
+PASO 10: Espera a que termine (~5 minutos):
+   ├─ Compilando...
+   ├─ Construyendo imagen Docker
+   ├─ Deployando en Railway
+   └─ ✅ Completado
+
+PASO 11: Obtén tu URL:
+   railway status
+   
+   Verás: OUTPUT_URL -> https://zahkiel-portal.up.railway.app
+
+═══════════════════════════════════════════════════════════════════════════
+
+✅ UNA VEZ DEPLOYADO:
+
+Test Health:
+   curl https://zahkiel-portal.up.railway.app/health
+
+Test Login:
+   curl -X POST https://zahkiel-portal.up.railway.app/api/auth/login \
+     -H "Content-Type: application/json" \
+     -d '{"email":"admin@zahkiel.com","password":"123456"}'
+
+═══════════════════════════════════════════════════════════════════════════
+
+🔐 GENERAR SECRETS (PowerShell):
+
+JWT_SECRET:
+   $jwt = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes((Get-Random -SetSeed (Get-Random) -Maximum 999999999).ToString() + [guid]::NewGuid().ToString())); $jwt.Substring(0, 32)
+
+JWT_REFRESH_SECRET:
+   $refresh = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes((Get-Random -SetSeed (Get-Random) -Maximum 999999999).ToString() + [guid]::NewGuid().ToString())); $refresh.Substring(0, 32)
+
+═══════════════════════════════════════════════════════════════════════════
+
+📞 TROUBLESHOOTING:
+
+Si ves: "Unauthorized"
+  → Necesitas configurar el token: $env:RAILWAY_TOKEN = "tu_token"
+
+Si ves: "Build failed"
+  → railway logs
+  → Verifica que todo esté configurado
+
+Si ves: "DATABASE_URL not found"
+  → railway variables set DATABASE_URL={la que te muestra railway status}
+
+═══════════════════════════════════════════════════════════════════════════
+
+💡 TIPS:
+
+1. Guarda tu token en un lugar seguro
+2. No compartas el token públicamente
+3. Railway se auto-actualiza cuando haces git push
+
+═══════════════════════════════════════════════════════════════════════════
+
+¿LISTO? Ve a: https://railway.app y comienza! 🚀

@@ -1,0 +1,115 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║              ⚡ DEPLOY RÁPIDO - 3 PASOS (10 MINUTOS)                     ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+PASO 1: Ir a Railway
+═══════════════════════════════════════════════════════════════════════════
+
+1. Abre: https://railway.app
+2. Haz clic en "Sign Up"
+3. Conecta tu GitHub (DgoHc)
+4. Autoriza Railway
+
+✅ Hecho
+
+
+PASO 2: Obtener tu token
+═══════════════════════════════════════════════════════════════════════════
+
+1. En Railway, ve a: Account → Tokens
+   (O: https://railway.app/account/tokens)
+
+2. Haz clic en "Create New Token"
+
+3. COPIA el token (es muy largo)
+
+✅ Hecho
+
+
+PASO 3: Ejecutar deploy
+═══════════════════════════════════════════════════════════════════════════
+
+En PowerShell, ejecuta esto:
+
+  $env:RAILWAY_TOKEN = "pega_tu_token_aqui"
+  cd c:\Users\DIEGO\EstudiantesPla\ZahkielAP
+  .\deploy.bat "pega_tu_token_aqui"
+
+O más simple:
+
+  railway init --name zahkiel-portal
+
+Responde:
+  - Project: zahkiel-portal (presiona Enter)
+  - Environment: Production (presiona Enter)
+
+Luego:
+
+  railway add
+  Selecciona: PostgreSQL
+
+Luego:
+
+  railway variables set NODE_ENV=production
+  railway variables set JWT_SECRET=cualquier_texto_aqui_32_chars_minimo
+  railway variables set JWT_REFRESH_SECRET=otro_texto_aqui_32_chars_minimo
+
+Finalmente:
+
+  railway up
+
+⏳ Espera 5 minutos (verás los logs)
+
+✅ Hecho
+
+
+PASO 4: Verificar que funciona
+═══════════════════════════════════════════════════════════════════════════
+
+En PowerShell:
+
+  railway status
+
+Deberías ver algo como:
+  OUTPUT_URL: https://zahkiel-portal-prod.up.railway.app
+
+Ve a esa URL en el navegador y deberías ver:
+
+  { "status": "OK", "timestamp": "2026-02-10T..." }
+
+✅ Funcionando
+
+
+RESULTADO FINAL
+═══════════════════════════════════════════════════════════════════════════
+
+Tu aplicación estará en:
+  https://zahkiel-portal-prod.up.railway.app
+
+Base de datos:
+  Automática en Railway (PostgreSQL)
+
+Usuarios de prueba:
+  admin@zahkiel.com / 123456
+  teacher@zahkiel.com / 123456
+  student@zahkiel.com / 123456
+
+═══════════════════════════════════════════════════════════════════════════
+
+💡 TIPS:
+
+- Si necesitas los logs:   railway logs
+- Si necesitas status:     railway status
+- Si necesitas variables:  railway variables
+
+═══════════════════════════════════════════════════════════════════════════
+
+¿Problemas?
+
+Lee: RAILWAY_SETUP_MANUAL.txt
+
+═══════════════════════════════════════════════════════════════════════════
+
+¡Listo! 🚀
